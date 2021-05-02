@@ -23,7 +23,8 @@ int main(int argc, char *argv[], char *envp[]) {
 	char *PWD = getenv("PWD");
 	char *LOGNAME = getenv("LOGNAME");
 
-	char input_buffer[MAX_INPUT_SIZE];
+	char *input_buffer = (char *) malloc(MAX_INPUT_SIZE * sizeof(char));
+	char *command = (char *) malloc(sizeof(char) * MAX_INPUT_SIZE);
 
 	while (1) {
 		print_header(LOGNAME, USERNAME, HOME, PWD);
@@ -32,8 +33,19 @@ int main(int argc, char *argv[], char *envp[]) {
 		if (strcmp(input_buffer, "exit") == 0) {
 			return 0;
 		} else {
-			printf("%ld\n", strlen(input_buffer));
-			execl("/usr/bin/ls", "/usr/bin/ls", NULL);
+			pid_t id = fork();
+	
+			if (id == 0) {
+				strncpy(command, input_buffer, strlen(input_buffer) - 1);	
+				if (execl(command, command, NULL) == -1) {
+					if (execlp(command, command, NULL) == -1) {
+						printf("Could not execute command\n");
+					}
+				}
+			} else {
+				wait(NULL);
+			}
+		       	
 		}
 
 	}
