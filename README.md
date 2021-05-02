@@ -1,4 +1,4 @@
-#Bash-like Terminal
+# Bash-like Terminal
 
 Bash-like terminal is a command line built with the C program language to  
 gain greater understanding of systems progamming, multitasking, forking,
